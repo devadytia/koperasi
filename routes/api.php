@@ -13,10 +13,10 @@ Route::get('/user', function (Request $request) {
 Route::name('api.')->group(function() {
     Route::name('koperasi.')->prefix('koperasi')->group(function () {
         Route::get('/', [KoperasiController::class, 'index'])->name('index');
-        Route::post('/store', [KoperasiController::class, 'store'])->name('store');;
-        Route::get('/edit/{code}', [KoperasiController::class, 'edit'])->name('edit');;
-        Route::post('/update/{code}', [KoperasiController::class, 'update'])->name('update');;
-        Route::post('/delete/{code}', [KoperasiController::class, 'delete'])->name('delete');;
+        Route::post('/store', [KoperasiController::class, 'store'])->name('store');
+        Route::post('/update/{code}', [KoperasiController::class, 'update'])->name('update');
+        Route::post('/delete/{code}', [KoperasiController::class, 'delete'])->name('delete');
+        Route::post('/find/{code}', [KoperasiController::class, 'find'])->name('find');
     });
 
     Route::get('/item', [ItemController::class, 'index'])->name('item.index');

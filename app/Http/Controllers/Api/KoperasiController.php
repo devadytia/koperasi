@@ -68,12 +68,64 @@ class KoperasiController extends Controller
         }
     }
 
-    public function delete($code) {
+    public function update(StoreKoperasiRequest $request, $code)
+    {
         try {
-            
+            $cooperative = Cooperative::find($code);
+            $cooperative->qty = $request->qty;
+            $cooperative->tanggal_transaksi = now();
+            $cooperative->harga = $request->harga;
+            $cooperative->bayar = $request->bayar;
+            $cooperative->npk = $request->npk;
+            $cooperative->kode = $request->itemCode;
+            $cooperative->save();
+
+            return response()->json([
+                'status' => true,
+                'messages' => 'Berhasil update data koperasi',
+                'data'   => $request->all(),
+            ]);
+        } catch(\Exception $e) {
+            return response()->json([
+                'status' => false,
+                'messages' => $e->getMessage(),
+                'data'   => [],
+            ]);
+        }
+    }
+
+    public function find($code) {
+        try {
             $cooperative = Cooperative::find($code);
 
             if (! $cooperative) {
+                return response()->json([
+                    'status'  => false,
+                    'message' => 'Data tidak ditemukan',
+                    'data' => [],
+                ], 404);
+            }
+
+            return response()->json([
+                'status' => true,
+                'messages' => 'Berhasil store data koperasi',
+                'data'   => $cooperative,
+            ]);
+        } catch(\Exception $e) {
+            return response()->json([
+                'status' => false,
+                'messages' => $e->getMessage(),
+                'data'   => [],
+            ]);
+        }
+    }
+
+    public function delete($code) {
+        try {
+
+            $cooperative = Cooperative::find($code);
+
+            if (!$cooperative) {
                 return response()->json([
                     'status'  => false,
                     'message' => 'Data tidak ditemukan',

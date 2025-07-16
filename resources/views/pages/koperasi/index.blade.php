@@ -98,9 +98,9 @@
                     <td class="px-6 py-4">
                         {{ $item['bayar'] ? '1' : '0' }}
                     </td>
-                    <td class="px-6 py-4 text-right gap-8">
+                    <td class="px-6 py-4 text-left gap-8">
                         <a href="{{ route('edit', $item['id']) }}" class="font-medium text-blue-600 pr-4 hover:underline">Edit</a>
-                        <a href="{{ route('api.koperasi.delete', $item['id']) }}" class="font-medium text-red-600  hover:underline">Delete</a>
+                        <button type="button" onclick="setUriDelete('{{ $item['id'] }}')" class="font-medium text-red-600  hover:underline">Delete</a>
                     </td>
                 </tr>
             @empty
@@ -114,4 +114,51 @@
     </table>
 </div>
 
+
+<div class="hidden" id="popup-modal">
+  <button class="rounded-md bg-gray-950/5 px-2.5 py-1.5 text-sm font-semibold text-gray-900 hover:bg-gray-950/10">Open dialog</button>
+
+  <div role="dialog" aria-modal="true" aria-labelledby="dialog-title" class="relative z-10">
+    <div aria-hidden="true" class="fixed inset-0 bg-gray-500/75 transition-opacity"></div>
+    <div class="fixed inset-0 z-10 w-screen overflow-y-auto">
+      <div class="flex min-h-full items-end justify-center p-4 text-center sm:items-center sm:p-0">
+        <div class="relative transform overflow-hidden rounded-lg bg-white text-left shadow-xl transition-all sm:my-8 sm:w-full sm:max-w-lg">
+          <div class="bg-white px-4 pt-5 pb-4 sm:p-6 sm:pb-4">
+            <div class="sm:flex sm:items-start">
+              <div class="mx-auto flex size-12 shrink-0 items-center justify-center rounded-full bg-red-100 sm:mx-0 sm:size-10">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" data-slot="icon" aria-hidden="true" class="size-6 text-red-600">
+                  <path d="M12 9v3.75m-9.303 3.376c-.866 1.5.217 3.374 1.948 3.374h14.71c1.73 0 2.813-1.874 1.948-3.374L13.949 3.378c-.866-1.5-3.032-1.5-3.898 0L2.697 16.126ZM12 15.75h.007v.008H12v-.008Z" stroke-linecap="round" stroke-linejoin="round" />
+                </svg>
+              </div>
+              <div class="mt-3 text-center sm:mt-0 sm:ml-4 sm:text-left">
+                <h3 id="dialog-title" class="text-base font-semibold text-gray-900">Are you sure delete ?</h3>
+                <div class="mt-2">
+                  <p class="text-sm text-gray-500">Are you sure you want to delete data? Your data will be permanently deleted. This action cannot be undone.</p>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="bg-gray-50 px-4 py-3 flex justify-end  sm:px-6">
+            <a href="#" id="uri-delete" class="mt-3 inline-flex w-full mr-2 justify-center rounded-md bg-red-500 text-white px-3 py-2 text-sm font-semibold shadow-xs ring-1 ring-red-300 ring-inset hover:bg-red-300 sm:mt-0 sm:w-auto">Delete</a>
+            <button type="button" onclick="removePopup()" class="mt-3 inline-flex w-full justify-center rounded-md bg-white px-3 py-2 text-sm font-semibold text-gray-900 shadow-xs ring-1 ring-gray-300 ring-inset hover:bg-gray-50 sm:mt-0 sm:w-auto">Cancel</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+    function setUriDelete(id) {
+        let baseUrl = "{{ route('delete', ['code' => ':id']) }}";
+        let finalUrl = baseUrl.replace(':id', id);
+        document.getElementById('uri-delete').href = finalUrl;
+
+        document.getElementById("popup-modal").classList.remove('hidden');
+    }
+
+    function removePopup() {
+        document.getElementById("popup-modal").classList.add('hidden');
+    }
+</script>
 @endsection

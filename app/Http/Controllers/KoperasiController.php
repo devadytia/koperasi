@@ -15,11 +15,11 @@ class KoperasiController extends Controller
                 'name' => $request->query('name'),
                 'type' => $request->query('type'),
             ])->throw();
-    
+
             $koperasi = $koperasi->json('data');
 
             $employee = Http::acceptJson()->get(route('api.employee.index'))->throw();
-    
+
             $employee = $employee->json('data');
 
             return view('pages.koperasi.index', compact('koperasi', 'employee'));
@@ -31,11 +31,11 @@ class KoperasiController extends Controller
     public function create(Request $request) {
         try {
             $item = Http::acceptJson()->get(route('api.item.index'))->throw();
-    
+
             $dataItem = $item->json('data');
 
             $employee = Http::acceptJson()->get(route('api.employee.index'))->throw();
-    
+
             $employee = $employee->json('data');
 
             return view('pages.koperasi.create', compact('employee', 'dataItem'));
@@ -46,19 +46,31 @@ class KoperasiController extends Controller
 
     public function edit(Request $request, $code) {
         try {
-            $item = Http::acceptJson()->get(route('api.koperasi.edit', ['code' => $code]))->throw();
-    
-            $dataItem = $item->json('data');
+            $koperasi = Http::acceptJson()->post(route('api.koperasi.find', ['code' => $code]))->throw();
+
+            $koperasi = $koperasi->json('data');
 
             $item = Http::acceptJson()->get(route('api.item.index'))->throw();
-    
+
             $dataItem = $item->json('data');
 
             $employee = Http::acceptJson()->get(route('api.employee.index'))->throw();
-    
+
             $employee = $employee->json('data');
 
-            return view('pages.koperasi.create', compact('employee', 'dataItem'));
+            return view('pages.koperasi.edit', compact('employee', 'dataItem', 'koperasi'));
+        } catch(\Exception $e) {
+            dd($e->getMessage());
+        }
+    }
+
+    public function delete(Request $request, $code) {
+        try {
+            $koperasi = Http::acceptJson()->post(route('api.koperasi.delete', ['code' => $code]))->throw();
+
+            $koperasi = $koperasi->json('data');
+
+            return back();
         } catch(\Exception $e) {
             dd($e->getMessage());
         }
